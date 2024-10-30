@@ -10,7 +10,7 @@ class DoneCard extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         color: Colors.grey.shade600,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         children: [

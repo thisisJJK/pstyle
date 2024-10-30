@@ -29,7 +29,7 @@ class Month extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        calendarStyle: CalendarStyle(
+        calendarStyle: const CalendarStyle(
           
         ),
       ),

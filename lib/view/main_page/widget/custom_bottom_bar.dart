@@ -24,7 +24,7 @@ class CustomBottomBar extends StatelessWidget {
               () => SizedBox(
                 width: 65,
                 child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 222),
+                  duration: const Duration(milliseconds: 333),
                   style: TextStyle(
                     fontSize: _mainPageViewModel.isMust.value ? 20 : 16,
                     fontWeight: _mainPageViewModel.isMust.value
@@ -48,7 +48,7 @@ class CustomBottomBar extends StatelessWidget {
                 _mainPageViewModel.isDone.value = false;
                 _mainPageViewModel.pageController.animateToPage(
                   0,
-                  duration: const Duration(milliseconds: 222),
+                  duration: const Duration(milliseconds: 333),
                   curve: Curves.easeInOut,
                 );
               }
@@ -58,7 +58,7 @@ class CustomBottomBar extends StatelessWidget {
           //추가
           FloatingActionButton.small(
             onPressed: () {
-              _showAddTaskDialog(context);
+              _showCustomBottomSheet();
             },
             child: const Icon(
               FeatherIcons.plus,
@@ -69,7 +69,7 @@ class CustomBottomBar extends StatelessWidget {
               () => SizedBox(
                 width: 65,
                 child: AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 222),
+                  duration: const Duration(milliseconds: 333),
                   style: TextStyle(
                     fontSize: _mainPageViewModel.isDone.value ? 20 : 16,
                     fontWeight: _mainPageViewModel.isDone.value
@@ -93,7 +93,7 @@ class CustomBottomBar extends StatelessWidget {
                 _mainPageViewModel.isDone.value = true;
                 _mainPageViewModel.pageController.animateToPage(
                   1,
-                  duration: const Duration(milliseconds: 222),
+                  duration: const Duration(milliseconds: 333),
                   curve: Curves.easeInOut,
                 );
               }
@@ -104,68 +104,37 @@ class CustomBottomBar extends StatelessWidget {
     );
   }
 
-  void _showAddTaskDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("MUST 추가"),
-          content: Obx(
-            () => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // 할 일 제목 입력
-                TextField(
-                  onChanged: (value) =>
-                      _mainPageViewModel.taskTitle.value = value,
-                  decoration: const InputDecoration(labelText: "Task Title"),
-                ),
-                // 데드라인 시간
-                TextField(
-                  onChanged: (value) =>
-                      _mainPageViewModel.deadlineTime.value = value,
-                  decoration: const InputDecoration(labelText: "Dead line"),
-                ),
-
-                // 예상 소요 시간 입력
-                TextField(
-                  onChanged: (value) =>
-                      _mainPageViewModel.estimatedTime.value = value,
-                  decoration: const InputDecoration(
-                    labelText: "예상소요시간",
-                  ),
-                ),
-                // 중요 여부 체크박스
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Checkbox(
-                      value: _mainPageViewModel.isImportant.value,
-                      onChanged: (bool? value) {
-                        _mainPageViewModel.isImportant.value = value ?? false;
-                      },
-                    ),
-                    const Text('중요'),
-                  ],
-                ),
-              ],
-            ),
+  void _showCustomBottomSheet() {
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("취소"),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "This is a custom bottom sheet",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            TextButton(
+            const SizedBox(height: 16),
+            ElevatedButton(
               onPressed: () {
-                // 추가 작업 수행 (예: 할 일 저장)
-                Navigator.pop(context);
+                // 하단 시트 닫기
+                Get.back();
               },
-              child: const Text("추가"),
+              child: const Text("Close"),
             ),
           ],
-        );
-      },
+        ),
+      ),
+      isScrollControlled: true, // 시트를 전체 화면에 가깝게 띄우고 싶을 때 사용
+      barrierColor: Colors.black.withOpacity(0.5), // 배경 반투명 효과
     );
   }
 }

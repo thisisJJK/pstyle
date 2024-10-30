@@ -18,7 +18,7 @@ class MustCard extends StatelessWidget {
           color: _mustViewModel.isDoneChecked.value
               ? Colors.grey.shade600
               : Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
           children: [
@@ -43,14 +43,12 @@ class MustCard extends StatelessWidget {
                     border: Border.all(color: Colors.pink.shade500),
                     color: Theme.of(context).colorScheme.tertiaryContainer,
                   ),
-                  child: Center(
-                    child: Text(
-                      '중요',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color:
-                            Theme.of(context).colorScheme.onTertiaryContainer,
-                      ),
+                  child: Text(
+                    '중요',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
                     ),
                   ),
                 ),
@@ -66,6 +64,7 @@ class MustCard extends StatelessWidget {
                   ),
                   child: Text(
                     '200분',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
