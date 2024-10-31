@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:pstyle/view_model/done_view_model.dart';
 import 'package:pstyle/view_model/main_page_view_model.dart';
+import 'package:pstyle/view_model/must_view_model.dart';
 
 class CustomBottomBar extends StatelessWidget {
-  CustomBottomBar({super.key});
-  final MainPageViewModel _mainPageViewModel = Get.find<MainPageViewModel>();
+  final MainPageViewModel mainPageViewModel;
+  final MustViewModel mustViewModel;
+  final DoneViewModel doneViewModel;
+  const CustomBottomBar({
+    super.key,
+    required this.mainPageViewModel,
+    required this.mustViewModel,
+    required this.doneViewModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +35,11 @@ class CustomBottomBar extends StatelessWidget {
                 child: AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 333),
                   style: TextStyle(
-                    fontSize: _mainPageViewModel.isMust.value ? 20 : 16,
-                    fontWeight: _mainPageViewModel.isMust.value
+                    fontSize: mainPageViewModel.isMust.value ? 20 : 16,
+                    fontWeight: mainPageViewModel.isMust.value
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    color: _mainPageViewModel.isMust.value
+                    color: mainPageViewModel.isMust.value
                         ? Theme.of(context).colorScheme.onSecondary
                         : Colors.black38,
                   ),
@@ -42,11 +51,11 @@ class CustomBottomBar extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              if (_mainPageViewModel.isMust.value) null;
-              if (!_mainPageViewModel.isMust.value) {
-                _mainPageViewModel.isMust.value = true;
-                _mainPageViewModel.isDone.value = false;
-                _mainPageViewModel.pageController.animateToPage(
+              if (mainPageViewModel.isMust.value) null;
+              if (!mainPageViewModel.isMust.value) {
+                mainPageViewModel.isMust.value = true;
+                mainPageViewModel.isDone.value = false;
+                mainPageViewModel.pageController.animateToPage(
                   0,
                   duration: const Duration(milliseconds: 333),
                   curve: Curves.easeInOut,
@@ -58,7 +67,7 @@ class CustomBottomBar extends StatelessWidget {
           //추가
           FloatingActionButton.small(
             onPressed: () {
-              _showCustomBottomSheet();
+              _showCustomBottomSheet(context);
             },
             child: const Icon(
               FeatherIcons.plus,
@@ -71,11 +80,11 @@ class CustomBottomBar extends StatelessWidget {
                 child: AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 333),
                   style: TextStyle(
-                    fontSize: _mainPageViewModel.isDone.value ? 20 : 16,
-                    fontWeight: _mainPageViewModel.isDone.value
+                    fontSize: mainPageViewModel.isDone.value ? 20 : 16,
+                    fontWeight: mainPageViewModel.isDone.value
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    color: _mainPageViewModel.isDone.value
+                    color: mainPageViewModel.isDone.value
                         ? Theme.of(context).colorScheme.onSecondary
                         : Colors.black38,
                   ),
@@ -87,11 +96,11 @@ class CustomBottomBar extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              if (_mainPageViewModel.isDone.value) null;
-              if (!_mainPageViewModel.isDone.value) {
-                _mainPageViewModel.isMust.value = false;
-                _mainPageViewModel.isDone.value = true;
-                _mainPageViewModel.pageController.animateToPage(
+              if (mainPageViewModel.isDone.value) null;
+              if (!mainPageViewModel.isDone.value) {
+                mainPageViewModel.isMust.value = false;
+                mainPageViewModel.isDone.value = true;
+                mainPageViewModel.pageController.animateToPage(
                   1,
                   duration: const Duration(milliseconds: 333),
                   curve: Curves.easeInOut,
@@ -104,32 +113,187 @@ class CustomBottomBar extends StatelessWidget {
     );
   }
 
-  void _showCustomBottomSheet() {
+  void _showCustomBottomSheet(BuildContext context) {
     Get.bottomSheet(
       Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        padding: const EdgeInsets.fromLTRB(16, 30, 16, 25),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "This is a custom bottom sheet",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            //selected day
+            Text(
+              mustViewModel.getFormattedDate(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // 하단 시트 닫기
+            const SizedBox(
+              height: 16,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: '해야할 일을 입력하세요.',
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    width: 1,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    width: 1,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 160,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: '선택) 예상소요시간',
+                      hintStyle: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color:
+                              Theme.of(context).colorScheme.secondaryContainer,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                    ),
+                    child: Text(
+                      '+5분',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                    ),
+                    child: Text(
+                      '+10분',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                    ),
+                    child: Text(
+                      '+30분',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                  value: false,
+                  onChanged: (value) => true,
+                ),
+                const Text('중요'),
+                Checkbox(
+                  value: false,
+                  onChanged: (value) => true,
+                ),
+                const Text('매일'),
+              ],
+            ),
+
+            const SizedBox(
+              height: 12,
+            ),
+            GestureDetector(
+              onTap: () {
                 Get.back();
               },
-              child: const Text("Close"),
-            ),
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "MUST 추가하기",
+                      style: TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

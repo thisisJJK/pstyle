@@ -25,7 +25,7 @@ class MustView extends StatelessWidget {
                   separatorBuilder: (context, index) => const SizedBox(
                     height: 5,
                   ),
-                  itemCount: 2,
+                  itemCount: 10,
                   itemBuilder: (BuildContext context, int index) {
                     return MustCard();
                   },

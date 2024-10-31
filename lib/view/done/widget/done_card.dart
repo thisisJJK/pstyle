@@ -9,8 +9,10 @@ class DoneCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 5, 10, 5),
       height: 60,
       decoration: BoxDecoration(
-        color: Colors.grey.shade600,
-        borderRadius: BorderRadius.circular(30),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade700
+            : Colors.grey.shade400,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
@@ -21,43 +23,42 @@ class DoneCard extends StatelessWidget {
             onChanged: (value) {},
           ),
 
-          //중요여부
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //중요여부
               Container(
-                width: 45,
+                width: 35,
                 height: 20,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(color: Colors.pink.shade500),
                   color: Theme.of(context).colorScheme.tertiaryContainer,
                 ),
-                child: Center(
-                  child: Text(
-                    '중요',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
+                child: Text(
+                  '중요',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
                   ),
                 ),
               ),
+              //매일여부
               Container(
-                width: 45,
+                width: 35,
                 height: 20,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  borderRadius: BorderRadius.circular(
-                    5,
-                  ),
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: Colors.green),
+                  color: Colors.green.shade100,
                 ),
-                child: Text(
-                  '200분',
+                child: const Text(
+                  '매일',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -71,23 +72,50 @@ class DoneCard extends StatelessWidget {
             'ui 작업 마무리',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
           ),
+          const Spacer(),
+
           const SizedBox(
             width: 5,
           ),
-
-          const Spacer(),
-
           //데드라인
-          Text(
-            '17:30완료',
-            style: TextStyle(
-              fontSize: 15,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '17:30까지',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              //소요시간
+              Container(
+                width: 43,
+                height: 20,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(
+                    5,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '200분',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           )
         ],
       ),

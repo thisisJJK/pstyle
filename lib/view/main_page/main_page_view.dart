@@ -39,7 +39,7 @@ class MainPageView extends StatelessWidget {
           DoneView(),
         ],
       ),
-      floatingActionButton: CustomBottomBar(),
+      floatingActionButton: CustomBottomBar(mainPageViewModel: _mainPageViewModel, mustViewModel: _mustViewModel, doneViewModel: _doneViewModel,),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
