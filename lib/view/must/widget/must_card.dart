@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
+import 'package:pstyle/model/must_item_model.dart';
 import 'package:pstyle/view_model/must_view_model.dart';
 
 class MustCard extends StatelessWidget {
-  MustCard({super.key});
+  final MustItemModel must;
+  MustCard({super.key, required this.must});
 
   final MustViewModel _mustViewModel = Get.find<MustViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Container(
-        padding: const EdgeInsets.fromLTRB(0, 5, 10, 5),
-        height: 60,
-        decoration: BoxDecoration(
-          color: _mustViewModel.isDoneChecked.value
-              ? Theme.of(context).brightness == Brightness.dark
-                  ? Colors.grey.shade700
-                  : Colors.grey.shade400
-              : Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            //체크박스
-            Checkbox(
-              shape: const CircleBorder(),
-              value: _mustViewModel.isDoneChecked.value,
-              onChanged: (value) {
-                _mustViewModel.isDoneChecked.value = value!;
-              },
-            ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 5, 10, 5),
+      height: 60,
+      decoration: BoxDecoration(
+        color: must.isDone
+            ? Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey.shade700
+                : Colors.grey.shade400
+            : Theme.of(context).colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          //체크박스
+          Checkbox(
+            shape: const CircleBorder(),
+            value: must.isDone,
+            onChanged: (value) {
+              _mustViewModel.toggleDone(must.id!);
+            },
+          ),
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //중요여부
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //중요여부
+              if (must.isImportant!)
                 Container(
                   width: 35,
                   height: 20,
@@ -54,7 +55,8 @@ class MustCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                //매일여부
+              //매일여부
+              if (must.isDaily!)
                 Container(
                   width: 35,
                   height: 20,
@@ -72,39 +74,42 @@ class MustCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
+            ],
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          //할일
+          Text(
+            must.title,
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
-            const SizedBox(
-              width: 10,
-            ),
-            //할일
-            Text(
-              'ui 작업 마무리',
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-            const Spacer(),
+          ),
+          const Spacer(),
 
-            const SizedBox(
-              width: 5,
-            ),
-            //데드라인
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '07:30까지',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  ),
+          const SizedBox(
+            width: 5,
+          ),
+          //데드라인
+
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _mustViewModel.deadlineFormattedTime(must.deadline),
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
                 ),
+              ),
+              if (must.estimatedTime != null)
                 const SizedBox(
                   width: 5,
                 ),
-                //소요시간
+              //소요시간
+              if (must.estimatedTime != 0)
                 Container(
                   height: 20,
                   padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -116,7 +121,7 @@ class MustCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '20분',
+                      '${must.estimatedTime}분',
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -124,10 +129,9 @@ class MustCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            )
-          ],
-        ),
+            ],
+          )
+        ],
       ),
     );
   }

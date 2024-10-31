@@ -68,8 +68,8 @@ class Week extends StatelessWidget {
             firstDay: DateTime.utc(2021, 1, 1),
             lastDay: DateTime.utc(2029, 12, 31),
             onDaySelected: (selectedDay, focusedDay) {
-              _mustViewModel.selectedDay.value = selectedDay;
               _mustViewModel.focusDay.value = focusedDay;
+              _mustViewModel.loadMustBydate(selectedDay);
             },
             selectedDayPredicate: (day) =>
                 isSameDay(_mustViewModel.selectedDay.value, day),

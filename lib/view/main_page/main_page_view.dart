@@ -35,11 +35,14 @@ class MainPageView extends StatelessWidget {
           }
         },
         children: [
-          const MustView(),
-          DoneView(),
+          MustView(),
+          const DoneView(),
         ],
       ),
-      floatingActionButton: CustomBottomBar(mainPageViewModel: _mainPageViewModel, mustViewModel: _mustViewModel, doneViewModel: _doneViewModel,),
+      floatingActionButton: CustomBottomBar(
+        mainPageViewModel: _mainPageViewModel,
+        mustViewModel: _mustViewModel,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

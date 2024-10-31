@@ -22,7 +22,7 @@ class DatabaseService {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         isDone INTEGER NOT NULL DEFAULT 0,
-        deadline TEXT ,
+        deadline TEXT NOT NULL,
         isImportant INTEGER DEFAULT 0,
         isDaily INTEGER DEFAULT 0,
         estimatedTime INTEGER
