@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pstyle/service/admob_service.dart';
 
 class MainPageViewModel extends GetxController {
   var pageIndex = 0.obs;
@@ -13,4 +14,12 @@ class MainPageViewModel extends GetxController {
   var estimatedTime = ''.obs;
 
   final PageController pageController = Get.put(PageController());
+  final AdMobService adMobService = Get.put(AdMobService());
+
+ @override
+  void onInit() {
+        adMobService.configureAdSettings();
+
+    super.onInit();
+  }
 }

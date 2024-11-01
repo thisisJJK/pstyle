@@ -24,6 +24,7 @@ class TodayMust extends StatelessWidget {
             '${mustViewModel.filtedByIsDoneMust.length}/${mustViewModel.filtedBydateMust.length}',
             style: const TextStyle(
               fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           );
         }),

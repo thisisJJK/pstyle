@@ -40,6 +40,8 @@ class MustCard extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           _mustViewModel.delMust(must.id!);
+                          _mustViewModel
+                              .loadMustBydate(_mustViewModel.selectedDay.value);
                           Get.back();
                         },
                         child: const Text(
@@ -69,9 +71,9 @@ class MustCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: must.isDone
               ? Theme.of(context).brightness == Brightness.dark
-                  ? Colors.grey.shade700
-                  : Colors.grey.shade400
-              : Theme.of(context).colorScheme.primaryContainer,
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade500
+              : Theme.of(context).colorScheme.primary.withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -116,7 +118,7 @@ class MustCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.green),
-                      color: Colors.green.shade100,
+                      color: Colors.green.shade100.withOpacity(0.9),
                     ),
                     child: const Text(
                       '매일',
@@ -136,7 +138,7 @@ class MustCard extends StatelessWidget {
             Text(
               must.title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),

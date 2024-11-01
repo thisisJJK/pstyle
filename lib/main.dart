@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pstyle/service/theme_service.dart';
-import 'package:pstyle/view/main_page/main_page_view.dart';
+import 'package:pstyle/view/splash/splash_view.dart';
 
 void main() async {
   await initializeDateFormatting('ko_KR', '');
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: MainPageView(),
+        home: const SplashView(),
       ),
     );
   }

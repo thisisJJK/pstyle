@@ -15,7 +15,7 @@ class DoneCard extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey.shade700
+            ? Colors.grey.shade800
             : Colors.grey.shade400,
         borderRadius: BorderRadius.circular(10),
       ),
@@ -58,7 +58,7 @@ class DoneCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.green),
-                    color: Colors.green.shade100,
+                    color: Colors.green.shade100.withOpacity(0.9),
                   ),
                   child: const Text(
                     '매일',

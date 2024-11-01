@@ -18,9 +18,12 @@ class DoneView extends StatelessWidget {
           child: Column(
             children: [
               Month(),
-               TextDoneList(),
               const SizedBox(
-                height: 5,
+                height: 8,
+              ),
+              TextDoneList(),
+              const SizedBox(
+                height: 8,
               ),
               Obx(() {
                 final done = _doneViewModel.filtedByIsDoneMust;
