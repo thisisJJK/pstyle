@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pstyle/view_model/must_view_model.dart';
 
 class TodayMust extends StatelessWidget {
-  const TodayMust({super.key});
+  TodayMust({super.key});
+  final MustViewModel mustViewModel = Get.find<MustViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '오늘의 MUST',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 21,
           ),
         ),
-        Spacer(),
-        Text(
-          '0 / 8',
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
+        const Spacer(),
+        Obx(() {
+          return Text(
+            '${mustViewModel.filtedByIsDoneMust.length}/${mustViewModel.filtedBydateMust.length}',
+            style: const TextStyle(
+              fontSize: 18,
+            ),
+          );
+        }),
       ],
     );
   }

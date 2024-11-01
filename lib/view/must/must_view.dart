@@ -20,7 +20,7 @@ class MustView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //오늘의 머스트
-              const TodayMust(),
+               TodayMust(),
               //머스트 카드
               Obx(() {
                 final must = mustViewModel.filtedBydateMust;

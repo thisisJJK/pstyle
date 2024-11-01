@@ -26,17 +26,19 @@ class MainPageView extends StatelessWidget {
             _mainPageViewModel.isDone.value = false;
             _mustViewModel.resetDate();
             _doneViewModel.resetDate();
+            _mustViewModel.loadMustBydate(_mustViewModel.selectedDay.value);
           }
           if (index == 1) {
             _mainPageViewModel.isDone.value = true;
             _mainPageViewModel.isMust.value = false;
             _mustViewModel.resetDate();
             _doneViewModel.resetDate();
+            _doneViewModel.loadMustBydate(_doneViewModel.selectedDay.value);
           }
         },
         children: [
           MustView(),
-          const DoneView(),
+          DoneView(),
         ],
       ),
       floatingActionButton: CustomBottomBar(

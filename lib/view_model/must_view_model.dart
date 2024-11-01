@@ -10,6 +10,7 @@ class MustViewModel extends GetxController {
 
   var allMust = <MustItemModel>[].obs;
   var filtedBydateMust = <MustItemModel>[].obs;
+  var filtedByIsDoneMust = <MustItemModel>[].obs;
 
   var deadlineTime = DateTime.now().obs;
   var estimatedTime = 0.obs;
@@ -24,37 +25,68 @@ class MustViewModel extends GetxController {
     super.onInit();
   }
 
-  void loadMustBydate(DateTime date) {
+  void loadMustBydate(DateTime date) async {
     selectedDay.value = date;
-    filterBydate();
+    await filterBydate();
+    filterByIsDone();
   }
 
-  void filterBydate() async {
+  Future<void> filterBydate() async {
     allMust.value = await _databaseService
         .databaseConfig()
         .then((value) => _databaseService.readAllMustItems());
     filtedBydateMust.value = allMust
+        .where((task) =>
+            (task.isDaily! &&
+                task.deadline.year == selectedDay.value.year &&
+                task.deadline.month == selectedDay.value.month &&
+                task.deadline.day == selectedDay.value.day) ||
+            (!task.isDaily! &&
+                task.deadline.year == selectedDay.value.year &&
+                task.deadline.month == selectedDay.value.month &&
+                task.deadline.day == selectedDay.value.day))
+        .toList();
+
+    filtedBydateMust.sort((a, b) => a.deadline.compareTo(b.deadline));
+  }
+
+  void filterByIsDone() async {
+    filtedByIsDoneMust.value = filtedBydateMust
         .where(
-          (task) =>
-              task.isDaily! ||
-              task.deadline.year == selectedDay.value.year &&
-                  task.deadline.month == selectedDay.value.month &&
-                  task.deadline.day == selectedDay.value.day,
+          (task) => task.isDone,
         )
         .toList();
+
+
   }
 
   //완료여부 업데이트
   void toggleDone(int id) async {
-    int taskIndex = allMust.indexWhere((task) => task.id == id);
+    int taskIndex = allMust.indexWhere(
+      (task) =>
+          task.id == id &&
+          task.deadline.year == selectedDay.value.year &&
+          task.deadline.month == selectedDay.value.month &&
+          task.deadline.day == selectedDay.value.day,
+    );
     if (taskIndex != -1) {
       allMust[taskIndex].isDone = !allMust[taskIndex].isDone;
       allMust.refresh(); // allMust 새로고침
       await _databaseService.databaseConfig().then(
             (value) => _databaseService.updateMustItem(allMust[taskIndex]),
           );
-      filterBydate(); // 필터링 목록 업데이트
+      filterBydate();
+      filterByIsDone(); // 필터링 목록 업데이트
     }
+  }
+
+//삭제
+  void delMust(int id) async {
+    await _databaseService
+        .databaseConfig()
+        .then((_) => _databaseService.deleteMustItem(id));
+    filterBydate();
+    filterByIsDone();
   }
 
   //추가
@@ -64,23 +96,52 @@ class MustViewModel extends GetxController {
     int? estimatedTime,
     bool isImportant = false,
     bool isDaily = false,
+    int days = 14,
   }) async {
-    final newTask = MustItemModel(
-      title: title,
-      deadline: deadline,
-      estimatedTime: estimatedTime,
-      isImportant: isImportant,
-      isDaily: isDaily,
-    );
-
-    // 데이터베이스에 저장
-    final id = await _databaseService.databaseConfig().then(
-          (value) => _databaseService.createMustItem(newTask),
+    if (isDaily) {
+      for (int i = 0; i < days; i++) {
+        final date = deadline.add(Duration(days: i));
+        if (allMust.any(
+          (task) =>
+              task.title == title && task.deadline == date && task.isDaily!,
+        )) {
+          continue; // 중복된 항목이 있는 경우 추가하지 않음
+        }
+        final dailyTask = MustItemModel(
+          title: title,
+          deadline: date,
+          estimatedTime: estimatedTime,
+          isImportant: isImportant,
+          isDaily: isDaily,
         );
 
-    // 새로 생성된 ID를 할 일 항목에 할당하고 메모리 목록에 추가
-    allMust.add(newTask.copyWith(id: id));
-    allMust.refresh(); // 추가 후 목록 업데이트
+        // 데이터베이스에 각 날짜별 항목 저장
+        final id = await _databaseService.databaseConfig().then(
+              (value) => _databaseService.createMustItem(dailyTask),
+            );
+
+        // 새로 생성된 ID를 할 일 항목에 할당하고 메모리 목록에 추가
+        allMust.add(dailyTask.copyWith(id: id));
+      }
+    } else {
+      // 단일 항목 추가
+      final newTask = MustItemModel(
+        title: title,
+        deadline: deadline,
+        estimatedTime: estimatedTime,
+        isImportant: isImportant,
+        isDaily: isDaily,
+      );
+
+      // 데이터베이스에 저장
+      final id = await _databaseService.databaseConfig().then(
+            (value) => _databaseService.createMustItem(newTask),
+          );
+
+      // 새로 생성된 ID를 할 일 항목에 할당하고 메모리 목록에 추가
+      allMust.add(newTask.copyWith(id: id));
+    }
+    allMust.refresh(); // 목록 새로고침
   }
 
   //예상소요시간

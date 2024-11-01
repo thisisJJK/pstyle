@@ -7,6 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 class Month extends StatelessWidget {
   Month({super.key});
   final DoneViewModel _doneViewModel = Get.find<DoneViewModel>();
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -16,8 +17,8 @@ class Month extends StatelessWidget {
         firstDay: DateTime.utc(2021, 1, 1),
         lastDay: DateTime.utc(2029, 12, 31),
         onDaySelected: (selectedDay, focusedDay) {
-          _doneViewModel.selectedDay.value = selectedDay;
           _doneViewModel.focusDay.value = focusedDay;
+          _doneViewModel.loadMustBydate(selectedDay);
         },
         selectedDayPredicate: (day) =>
             isSameDay(_doneViewModel.selectedDay.value, day),
@@ -29,9 +30,7 @@ class Month extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        calendarStyle: const CalendarStyle(
-          
-        ),
+        calendarStyle: const CalendarStyle(),
       ),
     );
   }

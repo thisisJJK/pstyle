@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pstyle/view_model/done_view_model.dart';
 
 class TextDoneList extends StatelessWidget {
-  const TextDoneList({super.key});
+  TextDoneList({super.key});
+  final DoneViewModel _doneViewModel = Get.find<DoneViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           'Done List',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 21,
           ),
         ),
-        Text(
-          '총 10개',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 21,
+        Obx(()=>
+          Text(
+            '총 ${_doneViewModel.filtedByIsDoneMust.length}개',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 21,
+            ),
           ),
         ),
       ],

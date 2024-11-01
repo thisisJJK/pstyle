@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
+import 'package:pstyle/service/theme_service.dart';
 import 'package:pstyle/view_model/must_view_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -9,6 +10,7 @@ class Week extends StatelessWidget {
   Week({super.key});
 
   final MustViewModel _mustViewModel = Get.find<MustViewModel>();
+  final ThemeService _themeService = Get.find<ThemeService>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,10 @@ class Week extends StatelessWidget {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: () => _mustViewModel.resetDate(),
+              onTap: () {
+                _mustViewModel.resetDate();
+                _mustViewModel.loadMustBydate(_mustViewModel.focusDay.value);
+              },
               child: Container(
                 height: 30,
                 width: 45,
@@ -47,10 +52,16 @@ class Week extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                FeatherIcons.settings,
+            Obx(
+              () => IconButton(
+                onPressed: () {
+                  _themeService.toggleTheme();
+                },
+                icon: _themeService.isDarkMode.value
+                    ? const Icon(
+                        FeatherIcons.moon,
+                      )
+                    : const Icon(FeatherIcons.sun),
               ),
             ),
           ],
